@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 
 
 def generate_data():
-    # y = np.zeros(100)
     y = np.ones(100)
     x = np.random.rand(100)
     x.shape = (100, 1)
@@ -30,29 +29,38 @@ def gradient_descent(x, y, alpha, theta):
     return theta
 
 
-theta = np.ones(4)
-alpha = 0.001
+def caluculate_theta(x, y, degree):
+    alpha = 0.001
 
-x, y = generate_data()
-x_second_column = x[:,1]
+    x_second_column = x[:, 1]
 
-for i in range(2,4):
-    new_column = x_second_column**i
-    new_column.shape = (100, 1)
-    x = np.concatenate((x, new_column), axis=1)
+    for i in range(2, degree):
+        new_column = x_second_column**i
+        new_column.shape = (100, 1)
+        x = np.concatenate((x, new_column), axis=1)
 
+    theta = np.ones(degree)
+    theta = gradient_descent(x, y, alpha, theta)
 
-# x_third_column = x_second_column**2
-# x_third_column.shape = (100,1)
-# x = np.concatenate((x, x_third_column), axis=1)
-
-theta = gradient_descent(x, y, alpha, theta)
-
-plt.plot(x[:,1], y, "ro")
-
-x_function = np.arange(0,1,0.000001)
-plt.plot(x_function, theta[0] + theta[1] * x_function + theta[2] * x_function**2 + theta[3] * x_function**3)
+    return theta
 
 
-plt.axis([0, 1, -1, 1])
-plt.show()
+def show_plot():
+    x, y = generate_data()
+    degree = 3
+    theta = caluculate_theta(x, y, degree + 1)
+    plt.plot(x[:, 1], y, "ro")
+
+    x_values = np.arange(0, 1, 0.000001)
+
+    y_values = 0
+    for i in range(0,len(theta)):
+         y_values += theta[i] * x_values**i
+
+    plt.plot(x_values, y_values)
+
+    plt.axis([0, 1, -1, 1])
+    plt.show()
+
+
+show_plot()
