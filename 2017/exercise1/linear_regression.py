@@ -24,11 +24,9 @@ def gradient_descent(x, y, alpha, theta):
     for i in range(0, 100000):
         hypothesis = np.dot(x, theta)
         loss = hypothesis - y
-        if i % 1000 == 0:
-            loss_square = loss**2
-            loss_sum = np.sum(loss_square)
-            print( loss_sum )
-            loss_data.append( loss_sum )
+        loss_square = loss**2
+        loss_sum = np.sum(loss_square)
+        loss_data.append(loss_sum)
         gradient = np.dot(x_trans, loss)
         theta = theta - alpha * gradient
 
@@ -55,8 +53,6 @@ def show_plot():
     x, y = generate_data()
     degree = 3
     theta,loss_data = caluculate_theta(x, y, degree + 1)
-    print( theta )
-    print( loss_data )
 
     plt.plot(x[:, 1], y, "ro")
 
@@ -74,7 +70,7 @@ def show_plot():
 
 
 def plot_error( loss_data ):
-    x_values = np.arange(0, 100, 1)
+    x_values = np.arange(0, 100000, 1)
     plt.plot( x_values, loss_data )
     plt.axis([0,100, 0, 700 ])
     plt.show()
