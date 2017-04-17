@@ -34,7 +34,7 @@ def gradient_descent(x, y, alpha, theta):
 
 
 def caluculate_theta(x, y, degree):
-    alpha = 0.001
+    alpha = 0.01
 
     x_second_column = x[:, 1]
 
@@ -52,27 +52,29 @@ def caluculate_theta(x, y, degree):
 def show_plot():
     x, y = generate_data()
     degree = 3
-    theta,loss_data = caluculate_theta(x, y, degree + 1)
+    theta, loss_data = caluculate_theta(x, y, degree + 1)
+    print(theta)
 
     plt.plot(x[:, 1], y, "ro")
 
     x_values = np.arange(0, 1, 0.000001)
 
     y_values = 0
-    for i in range(0,len(theta)):
-         y_values += theta[i] * x_values**i
+    for i in range(0, len(theta)):
+        y_values += theta[i] * x_values**i
 
     plt.plot(x_values, y_values)
 
     plt.axis([0, 1, -1, 1])
     plt.show()
-    plot_error( loss_data )
+    plot_error(loss_data)
 
 
-def plot_error( loss_data ):
+def plot_error(loss_data):
     x_values = np.arange(0, 100000, 1)
-    plt.plot( x_values, loss_data )
-    plt.axis([0,100, 0, 700 ])
+    plt.plot(x_values, loss_data)
+    plt.axis([0, 100, 0, 700])
     plt.show()
+
 
 show_plot()
