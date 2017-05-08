@@ -3,7 +3,6 @@ import glob
 from scipy import misc
 
 
-# prints an array of strings
 def read_images(path):
     files = glob.glob(path + "/*.png")
     images = []
@@ -30,11 +29,13 @@ def min_color_images(images):
         min_colors.append(min_color_component_image(image))
     return min_colors
 
+
 def num_pixels_low_red_green_images(images):
     num_dark_pixels = []
     for image in images:
         num_dark_pixels.append( num_pixels_low_red_green_component_image(image))
     return num_dark_pixels
+
 
 def num_pixels_low_red_green_component_image( image ):
     num_of_pi = 0
@@ -47,11 +48,13 @@ def num_pixels_low_red_green_component_image( image ):
                 num_of_pi += 1
     return num_of_pi
 
+
 def find_dark_pixel_spots_in_images(images):
     dps = []
     for image in images:
         dps.append( find_dark_pixel_spots_in_image( image ) )
     return dps
+
 
 def find_dark_pixel_spots_in_image(image):
     num_dps = 0
@@ -67,6 +70,7 @@ def find_dark_pixel_spots_in_image(image):
                 if green_val < 100 and north_px_val > 100 and east_px_val > 100 and south_px_val > 100 and west_px_val > 100:
                     num_dps += 1
     return num_dps
+
 
 def find_very_low_green_values_in_images(images):
     vlv = []
@@ -84,11 +88,7 @@ def find_very_low_green_values_in_image(image):
     return num_vlv
 
 
-
-
 def build_feature_matrix(postives, negatives):
-
-
     all_images = positives + negatives
 
     all_min_colors = np.array(min_color_images(all_images))
@@ -143,9 +143,28 @@ def generate_mean_vectors(positives, negatives):
     negative_mean_vector.append( np.mean(negatives_num_low_red_green) )
     negative_mean_vector.append( np.mean(negatives_num_dps) )
     negative_mean_vector.append( np.mean(negatives_num_very_low_green) )
-    return positive_mean_vector,negative_mean_vector
+
+    return positive_mean_vector, negative_mean_vector
+
+
+def pdf_multivariate_gauss(x, mean_vector, cov_matrix):
+    part1 = 1/ ( ((2 * np.pi)**(len(mean_vector)/2)) * (np.linalg.det(cov_matrix)**(1/2))  )
+    part2 = (-1/2) * ((x - mean_vector).T.dot(np.linalg.inv(cov_matrix)).dot((x - mean_vector)))
+    return float(part1 * np.exp(part2))
+
 
 positives = read_images('images/positives')
 negatives = read_images('images/negatives')
-fm = build_feature_matrix(positives, negatives)
-generate_mean_vectors(positives, negatives)
+feature_matrix = build_feature_matrix(positives, negatives)
+positive_mean_vector, negative_mean_vector = generate_mean_vectors(positives, negatives)
+feature_matrix_transposed = np.transpose(feature_matrix)
+cov_matrix = np.cov(feature_matrix_transposed)
+
+image_num = 5
+image_values = np.array(feature_matrix[image_num,:])
+gauss_negative = pdf_multivariate_gauss(image_values, negative_mean_vector, cov_matrix)
+gauss_positive = pdf_multivariate_gauss(image_values, positive_mean_vector, cov_matrix)
+px = gauss_negative * 0.5 + gauss_positive * 0.5
+pyx = (gauss_negative * 0.5) / px
+
+print("Image {} is negative with a probability of: {}".format(image_num, pyx))
