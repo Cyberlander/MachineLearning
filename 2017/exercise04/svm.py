@@ -22,7 +22,18 @@ yLabel = feature_matrix_module.vectorYLabel()
 
 training_set = feature_matrix[:59,:]
 test_set = feature_matrix[0,:]
+test_set2 = feature_matrix[feature_matrix.shape[0]-1,:]
 
-clf = svm.SVC(kernel="sigmoid", C=1,gamma=0.07)
-clf.fit(feature_matrix,yLabel)
-print(clf.predict(test_set))
+def linear_kernel_check( feature_marix, classifier_linear_kernel ):
+    output = []
+    for i in range( feature_matrix.shape[0]):
+        row = feature_matrix[i]
+        row = row.reshape(1,-1)
+        prediction = classifier_linear_kernel.predict( row )
+
+        output.append( prediction[0] )
+    return output
+
+classifier_linear_kernel = svm.SVC(kernel='linear', C = 1.0)
+classifier_linear_kernel.fit(feature_matrix,yLabel)
+print(linear_kernel_check(feature_matrix, classifier_linear_kernel))
