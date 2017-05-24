@@ -30,8 +30,13 @@ def transform_data_to_matrix(data):
 
 def initialize_point_importance( points ):
     count_points = len( points)
-    
+
+def show_plot(class1, class2):
+    plt.scatter(class1, class2, c=['red', 'blue'])
+    plt.show()
+
 
 data_circle = transform_data_to_matrix( data_cleaning( data ) )
 points = data_circle[:,:-1]
+show_plot(points[:,0], points[:,1])
 print( initialize_point_importance(points ))
