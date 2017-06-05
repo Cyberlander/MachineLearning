@@ -24,6 +24,9 @@ class AdaBoost:
         horizontal = True
         pos = 0
         for y_pos in range(min_y + 1, max_y - 1):
+            if y_pos in self.HORIZONTAL_LINES:
+                continue
+
             rule = lambda x, y_pos=y_pos: x[1] < y_pos
             error = self.add_rule(rule, test=True)
 
@@ -34,6 +37,9 @@ class AdaBoost:
                 pos = y_pos
 
         for x_pos in range(min_x + 1, max_x - 1):
+            if x_pos in self.VERTICAL_LINES:
+                continue
+
             rule = lambda x, x_pos=x_pos: x[0] < x_pos
             error = self.add_rule(rule, test=True)
 
@@ -56,7 +62,6 @@ class AdaBoost:
         if test:
             return e
 
-        # print("rule error ", e)
         alpha = 0.5 * np.log((1 - e) / e)
         w = np.zeros(self.N)
         for i in range(self.N):
