@@ -2,3 +2,5 @@
 *.pdf
 *.log
 *.synctex.gz
+Thumbs.db
+.DS_Store
