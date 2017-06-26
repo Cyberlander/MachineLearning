@@ -1,10 +1,14 @@
 import matplotlib.pyplot as plt
-from scipy.stats import norm
 import numpy as np
 
-range = np.arange(-10, 10, 0.1)
+params = [
+    ([0, 0], [[1, 0], [0, 100]], 'go'),
+    ([0, 0], [[100, 80], [0, 3]], 'bo'),
+    ([0, 0], [[100, -20], [0, 10]], "ro")
+]
 
-for mean, standard_deviation in [(-4, 3), (0, 3), (4, 3)]:
-    plt.plot(range, norm.pdf(range, mean, standard_deviation))
+for mean, cov, point in params:
+    x, y = np.random.multivariate_normal(mean, cov, 100).T
+    plt.plot(x, y, point)
 
 plt.show()
